@@ -4,13 +4,21 @@ a lightweight in-browser tool to make svg maps.
 ####SHORTCUT LIST####
 
 SHIFT + A          |  Clear Current Shape
+
 SHIFT + S          |  Save Current Shape To Memory
+
 SHIFT + D          |  Clear Last Created Point
+
 SHIFT + R          |  Load From File
+
 SHIFT + P          |  Save To File
+
 SHIFT + Z          |  Remove Last Created Shape From Memory
+
 MOUSEWHEEL         |  Scale Snapping Distance
+
 SHIFT + MOUSEWHEEL |  Zoom In And Out
+
 DRAGGING           |  Drags The Map Around
 
 ####TERRAIN TYPES####

@@ -54,7 +54,10 @@ $(window).resize(function(){
 $("div#tools button").click(function(){
 	$(this).siblings().removeClass("selected");
 	$(this).addClass("selected");
-	$("button#deletebutton").removeClass("selected");
+	if(GameView.mode == 'delete'){
+		$("button#deletebutton").removeClass("selected");
+		GameView.mode = 'default';
+	}
 	GameView.terrainType = $(this).attr('val');
 });
 
@@ -110,7 +113,7 @@ $("div#map").on('DOMMouseScroll mousewheel', function(e){
 }).on('mousedown', function(){
 	GameView.dragState = true;
     GameView.dragCounter = 0;
-}).on('mousemove', async function(e){
+}).on('mousemove', function(e){
 	GameView.mouse_x = e.pageX;
 	GameView.mouse_y = e.pageY;
     var k_p = convOffsetToRelative(e.pageX, e.pageY);

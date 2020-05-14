@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Map maker File</title>
+    <style>
+
+      body{
+        margin: 0;
+        background: #110e2f;
+        height: 100%;
+        overflow: hidden;
+      }
+      #map {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background: url("map.png");
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-position: 0px 0px;
+      }
+
+      #coordinates{
+        position: absolute;
+        right: 0;
+        width: 100px;
+        height: 20px;
+        background: white;
+        border: 3px black solid;
+        z-index: 10;
+      }
+
+      .stroke-path {
+        stroke: 4px black;
+      }
+
+      #current-path{
+        stroke: black;
+        fill: green;
+        fill-opacity: 0.5;
+      }
+
+      #cursor-path{
+        stroke: black;
+        fill: red;
+        fill-opacity: 0.5;
+      }
+
+      .rendered-path{
+        stroke:black;
+        fill:red;
+        fill-opacity: 0.3;
+      }
+
+      #tools{
+        height: 500px;
+        width: 40px;
+        background: white;
+        z-index: 10;
+        position: absolute;
+        right: 5px;
+        top: 30px;
+        border: 3px solid black;
+        border-radius: 4px;
+      }
+
+      .selected{
+        border: 6px double red
+      }
+
+      #tools button{
+        display:inline-block;
+        width:100%;
+        height:7.6923%;
+      }
+
+      #scalebox{
+        height: 20px;
+        width: 70px;
+        background: white;
+        border: 2px black solid;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        z-index: 10;
+      }
+
+      .flatland{
+        fill: #99FF33;
+        fill-opacity: 0.8;
+      }
+
+      .hills{
+        fill: #009933;
+        fill-opacity: 0.8;
+      }
+
+      .mountain{
+        fill: #666699;
+        fill-opacity: 0.8;
+      }
+
+      .peak{
+        fill: #FFFFFF;
+        fill-opacity: 0.8;
+      }
+
+      .coast{
+        fill: #FFFF99;
+        fill-opacity: 0.8;
+      }
+
+      .ocean{
+        fill: #000066;
+        fill-opacity: 0.8;
+      }
+
+      .swamp{
+        fill: #666633;
+        fill-opacity: 0.8;
+      }
+
+      .tundra {
+        fill: #D92B26;
+      }
+
+      .forest{
+        fill: #333300;
+      }
+
+      .obstacle{
+        fill: #000000;
+        fill-opacity: 0.8;
+      }
+
+      .rainforest{
+        fill: #003300;
+        fill-opacity: 0.8;
+      }
+
+      .arctic {
+        fill: #99CCFF;
+        fill-opacity: 0.8;
+      }
+
+      .river{
+        fill: #0099FF;
+        fill-opacity: 0.8;
+      }
+
+      #fileinput{
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index:10;
+      }
+
+      #deletebutton{
+        width: 50px;
+        height: 50px;
+        background: url("tiletextures/delete.png");
+        background-size: 100% 100%;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        z-index: 10;
+        border-radius: 9px;
+      }
+
+      #changebutton{
+        width: 50px;
+        height: 50px;
+        background: url("tiletextures/change.png");
+        background-size: 100% 100%;
+        position: absolute;
+        left: 50px;
+        bottom: 0;
+        z-index: 10;
+        border-radius: 9px;
+      }
+
+      .currentdelete{
+        stroke: 3x red;
+        fill: red;
+        fill-opacity: 0.6;
+      }
+
+
+    </style>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  </head>
+  <body>
+    <!--defs xmlns="http://www.w3.org/2000/svg">
+        <pattern id="flatland" patternUnits="userSpaceOnUse" width="100" height="100">
+            <image xlink:href="tiletextures/flatland.png" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="100" height="100"/>
+        </pattern>
+        <pattern id="hills" patternUnits="userSpaceOnUse" width="100" height="100">
+            <image xlink:href="tiletextures/hills.png" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="100" height="100"/>
+        </pattern>
+        <pattern id="mountain" patternUnits="userSpaceOnUse" width="100" height="100">
+            <image xlink:href="mountain.png" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="100" height="100"/>
+        </pattern>
+        <pattern id="peak" patternUnits="userSpaceOnUse" width="100" height="100">
+            <image xlink:href="tiletextures/peak.png" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="100" height="100"/>
+        </pattern>
+        <pattern id="coast" patternUnits="userSpaceOnUse" width="100" height="100">
+            <image xlink:href="tiletextures/coast.png" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="100" height="100"/>
+        </pattern>
+        <pattern id="ocean" patternUnits="userSpaceOnUse" width="100" height="100">
+            <image xlink:href="tiletextures/ocean.png" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="100" height="100"/>
+        </pattern>
+        <pattern id="swamp" patternUnits="userSpaceOnUse" width="100" height="100">
+            <image xlink:href="tiletextures/swamp.png" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="100" height="100"/>
+        </pattern>
+        <pattern id="obstacle" patternUnits="userSpaceOnUse" width="100" height="100">
+            <image xlink:href="tiletextures/obstacle.png" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="100" height="100"/>
+        </pattern>
+    </defs-->
+    <div id="coordinates"></div>
+    <input id="fileinput" type="file">
+    <button id="deletebutton"></button>
+    <button id="changebutton"></button>
+    <div id="tools">
+      <button val="flatland" style="background:url('tiletextures/flatland.png');background-size:100% 100%;"></button>
+      <button val="hills" style="background:url('tiletextures/hills.png');background-size:100% 100%;"></button>
+      <button val="mountain" style="background:url('tiletextures/mountain.png');background-size:100% 100%;"></button>
+      <button val="peak" style="background:url('tiletextures/peak.png');background-size:100% 100%;"></button>
+      <button val="coast" style="background:url('tiletextures/coast.png');background-size:100% 100%;"></button>
+      <button val="ocean" style="background:url('tiletextures/ocean.png');background-size:100% 100%;"></button>
+      <button val="swamp" style="background:url('tiletextures/swamp.png');background-size:100% 100%;"></button>
+      <button val="tundra" style="background:url('tiletextures/tundra.png');background-size:100% 100%;"></button>
+      <button val="forest" style="background:url('tiletextures/forest.png');background-size:100% 100%;"></button>
+      <button val="rainforest" style="background:url('tiletextures/rainforest.png');background-size:100% 100%;"></button>
+      <button val="arctic" style="background:url('tiletextures/arctic.png');background-size:100% 100%;"></button>
+      <button val="river" style="background:url('tiletextures/river.png');background-size:100% 100%;"></button>
+      <button val="obstacle" style="background:url('tiletextures/obstacle.png');background-size:100% 100%;"></button>
+    </div>
+    <input type="text" id="scalebox">
+    <div id="map" height-h="0" width-h="0" style=" position: absolute; left: 0; top: 0; height: 100%; width:100%;">
+      <svg id="svg-path" style="position: absolute;width: 100%; height: 100%;">
+        <circle id="cursor-path"></circle>
+        <path id="current-path"></path>
+        
+      </svg>
+    </div>
+
+    <script src="jquery.js"></script>
+    <script src="mapmakerscript.js"></script>
+    <!--script>
+    (window.jQuery || document.write('<script src="scripts/jquery.js"><\/script>'))
+    </script-->
+  </body>
+</html>

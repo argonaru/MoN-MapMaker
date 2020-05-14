@@ -24,17 +24,29 @@ DRAGGING           |  Drags The Map Around
 ####TERRAIN TYPES####
 
 -> flatland
+
 -> hills
+
 -> mountains
+
 -> mountain peaks
+
 -> coastline
+
 -> ocean
+
 -> swamp
+
 -> tundra
+
 -> forest
+
 -> rainforest
+
 -> arctic
+
 -> river
+
 -> impassable terrain
 
 #####################

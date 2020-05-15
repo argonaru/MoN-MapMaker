@@ -15,11 +15,11 @@ SHIFT + P          |  Save To File
 
 SHIFT + Z          |  Remove Last Created Shape From Memory
 
-MOUSEWHEEL         |  Scale Snapping Distance
+SHIFT + MOUSEWHEEL |  Scale Snapping Distance
 
-SHIFT + MOUSEWHEEL |  Zoom In And Out
+MOUSEWHEEL         |  Zoom In And Out
 
-DRAGGING           |  Drags The Map Around
+MOUSE DRAGGING     |  Drag The Map Around
 
 ####TERRAIN TYPES####
 

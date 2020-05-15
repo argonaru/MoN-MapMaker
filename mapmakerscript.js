@@ -49,6 +49,9 @@ $(window).resize(function(){
 	GameView.focused = true;
 }).blur(function(){
 	GameView.focused = false;
+	keyMap = keymap.map(function(key){
+		return false;
+	});
 })
 
 $("div#tools button").click(function(){
@@ -374,6 +377,8 @@ $(document).keydown(function(e){
 				return false;
 			});
 			download(JSON.stringify(allshapes), 'map.txt', 'text/plain');
+			keyMap[16] = false;
+			keyMap[80] = false;
 		}
 		if(keyMap[16] && keyMap[82]){
 			var myFile = $('#fileinput').prop('files')[0];

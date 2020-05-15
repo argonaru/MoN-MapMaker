@@ -88,14 +88,7 @@ $("div#map").on('DOMMouseScroll mousewheel', function(e){
 		var e = window.event || e;
 		var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
 		if(keyMap[16]){
-			if(delta > 0){
-				GameView.viewscale -= 0.01;
-			}else{
-				GameView.viewscale += 0.01;
-			}
-			$("svg#svg-path").attr('viewBox', '0 0 '+GameView.image_width+' '+GameView.image_height).css('width', GameView.image_width/(GameView.viewscale - 0.0000001)+"px ").css('height', GameView.image_height/(GameView.viewscale - 0.0000001)+"px").css('left', (-GameView.offset_x/GameView.viewscale)+"px ").css('top' , (-GameView.offset_y/GameView.viewscale)+"px");
-			$("div#map").css('background-size', GameView.image_width/(GameView.viewscale - 0.0000001)+"px "+GameView.image_height/(GameView.viewscale - 0.0000001)+"px").css('background-position', (-GameView.offset_x/GameView.viewscale)+"px "+(-GameView.offset_y/GameView.viewscale)+"px");
-		}else{
+
 			var newboundary = $("input#scalebox").val();
 			if(newboundary == "") newboundary = 0;
 			newboundary = parseInt(newboundary);
@@ -106,6 +99,16 @@ $("div#map").on('DOMMouseScroll mousewheel', function(e){
 				if(newboundary < 0) newboundary = 0;
 			}
 			$("input#scalebox").val(newboundary);
+
+
+		}else{
+			if(delta > 0){
+				GameView.viewscale -= 0.01;
+			}else{
+				GameView.viewscale += 0.01;
+			}
+			$("svg#svg-path").attr('viewBox', '0 0 '+GameView.image_width+' '+GameView.image_height).css('width', GameView.image_width/(GameView.viewscale - 0.0000001)+"px ").css('height', GameView.image_height/(GameView.viewscale - 0.0000001)+"px").css('left', (-GameView.offset_x/GameView.viewscale)+"px ").css('top' , (-GameView.offset_y/GameView.viewscale)+"px");
+			$("div#map").css('background-size', GameView.image_width/(GameView.viewscale - 0.0000001)+"px "+GameView.image_height/(GameView.viewscale - 0.0000001)+"px").css('background-position', (-GameView.offset_x/GameView.viewscale)+"px "+(-GameView.offset_y/GameView.viewscale)+"px");	
 		}
 		redefineCursorBoundary();
 	}
@@ -325,7 +328,7 @@ function redefineAllShapes(){
 }
 
 function renderNewShape(){
-	var string = "<path val=\""+newshape['id']+"\" class=\"rendered-path "+newshape['terrain_type']+"\" d=\"";
+	var string = "<path val=\""+newshape['id']+"\" class=\"rendered-path "+GameView.terrainType+"\" d=\"";
 	for(index in newshape){
 		if(index==0){
 			string+="M"+newshape[0][0]+" "+newshape[0][1]+" ";

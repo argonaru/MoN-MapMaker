@@ -107,6 +107,7 @@ $("div#map").on('DOMMouseScroll mousewheel', function(e){
 			}else{
 				GameView.viewscale += 0.01;
 			}
+			$("head").children(":last").html('.rendered-path{ stroke-width:'+GameView.viewscale+';} .cursor-path{'+GameView.viewscale+';}');
 			$("svg#svg-path").attr('viewBox', '0 0 '+GameView.image_width+' '+GameView.image_height).css('width', GameView.image_width/(GameView.viewscale - 0.0000001)+"px ").css('height', GameView.image_height/(GameView.viewscale - 0.0000001)+"px").css('left', (-GameView.offset_x/GameView.viewscale)+"px ").css('top' , (-GameView.offset_y/GameView.viewscale)+"px");
 			$("div#map").css('background-size', GameView.image_width/(GameView.viewscale - 0.0000001)+"px "+GameView.image_height/(GameView.viewscale - 0.0000001)+"px").css('background-position', (-GameView.offset_x/GameView.viewscale)+"px "+(-GameView.offset_y/GameView.viewscale)+"px");	
 		}

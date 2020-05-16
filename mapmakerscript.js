@@ -49,7 +49,7 @@ $(window).resize(function(){
 	GameView.focused = true;
 }).blur(function(){
 	GameView.focused = false;
-	keyMap = keyMap.map(function(key){
+	keyMap = objectMap(keyMap, function(){
 		return false;
 	});
 })
@@ -188,6 +188,13 @@ $("div#map").on('DOMMouseScroll mousewheel', function(e){
 	GameView.dragState = false;
 	GameView.dragCounter = 0;
 });
+
+function objectMap(object, mapFn) {
+  return Object.keys(object).reduce(function(result, key) {
+    result[key] = mapFn(object[key])
+    return result
+  }, {})
+}
 
 function convOffsetToRelative(x_0,y_0){
 	var cct = (x_0*(GameView.viewscale) + GameView.offset_x)//*(GameView.image_width/GameView.window_width);

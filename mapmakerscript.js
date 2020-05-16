@@ -49,7 +49,7 @@ $(window).resize(function(){
 	GameView.focused = true;
 }).blur(function(){
 	GameView.focused = false;
-	keyMap = keymap.map(function(key){
+	keyMap = keyMap.map(function(key){
 		return false;
 	});
 })

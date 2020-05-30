@@ -380,12 +380,12 @@ $(document).keydown(function(e){
 			newshape = [];
 		}
 		if(keyMap[80] && keyMap[16]){
-			keyMap = $.map(keyMap, function(keys){
-				return false;
-			});
-			download(JSON.stringify(allshapes), 'map.txt', 'text/plain');
-			keyMap[16] = false;
+			//keyMap = $.map(keyMap, function(keys){
+			//	return false;
+			//});
 			keyMap[80] = false;
+			keyMap[16] = false;
+			download(JSON.stringify(allshapes), 'map.txt', 'text/plain');
 		}
 		if(keyMap[16] && keyMap[82]){
 			var myFile = $('#fileinput').prop('files')[0];

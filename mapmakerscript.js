@@ -444,7 +444,7 @@ $(document).keydown(function(e){
 	}
 });
 
-function LoadOldFormat(){
+function loadOldFormat(){
 	let myFile = $('#fileinput').prop('files')[0];
 	let reader = new FileReader();
 	reader.onload = function (e) {

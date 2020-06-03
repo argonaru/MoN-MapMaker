@@ -444,6 +444,26 @@ $(document).keydown(function(e){
 	}
 });
 
+function LoadOldFormat(){
+	let myFile = $('#fileinput').prop('files')[0];
+	let reader = new FileReader();
+	reader.onload = function (e) {
+        output = e.target.result;
+        allshapes = $.parseJSON(output);
+        redefineAllShapes();
+    };
+    reader.readAsText(myFile);
+    n = function(){
+		let img = new Image();
+		img.onload = function(){
+			GameView.image_width = this.width;
+			GameView.image_height = this.height;
+		}
+		img.src = "map.png";
+		return;
+	}();
+}
+
 function downloadData(oldFormat=false){
 	if(oldFormat){
 		let newData = function(){

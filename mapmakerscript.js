@@ -1,4 +1,4 @@
-var GameView = {
+let GameView = {
     'viewscale' : 1.0000001,
     'offset_x' : 0,
     'offset_y' : 0,
@@ -17,8 +17,8 @@ var GameView = {
     'focused' : true
 }
 
-var n = function(){
-	var img = new Image();
+let n = function(){
+	let img = new Image();
 	img.onload = function(){
 		GameView.image_width = this.width;
 		GameView.image_height = this.height;
@@ -29,17 +29,17 @@ var n = function(){
 	return;
 }();
 
-var newshape = [];
+let newshape = [];
 
-var allshapes = [];
+let allshapes = [];
 
-var keyMap = { 16: false, 65: false, 83: false, 68: false , 80: false, 82: false, 90:false, 39: false, 37: false};
+let keyMap = { 16: false, 65: false, 83: false, 68: false , 80: false, 82: false, 90:false, 39: false, 37: false};
 
 $("svg#svg-path").attr("viewBox", ("0 0 " + GameView.window_width + " " + GameView.window_height));
 $("circle#cursor-path").attr("cx", GameView.coord_x).attr("cy", GameView.coord_y).attr("r", 1)
 
 $(window).resize(function(){
-	var wind = $("div#map");
+	let wind = $("div#map");
 	GameView.window_width = wind.width();
 	GameView.window_height = wind.height();
 	$("svg#svg-path").attr('viewBox', '0 0 '+GameView.image_width+' '+GameView.image_height).css('width', GameView.image_width/(GameView.viewscale - 0.0000001)+"px ").css('height', GameView.image_height/(GameView.viewscale - 0.0000001)+"px").css('left', (-GameView.offset_x/GameView.viewscale)+"px ").css('top' , (-GameView.offset_y/GameView.viewscale)+"px");
@@ -88,11 +88,11 @@ $("button#changebutton").click(function(){
 
 $("div#map").on('DOMMouseScroll mousewheel', function(e){
 	if(GameView.focused){
-		var e = window.event || e;
-		var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+		let e = window.event || e;
+		let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
 		if(keyMap[16]){
 
-			var newboundary = $("input#scalebox").val();
+			let newboundary = $("input#scalebox").val();
 			if(newboundary == "") newboundary = 0;
 			newboundary = parseInt(newboundary);
 			if(delta > 0){
@@ -123,11 +123,11 @@ $("div#map").on('DOMMouseScroll mousewheel', function(e){
 }).on('mousemove', function(e){
 	GameView.mouse_x = e.pageX;
 	GameView.mouse_y = e.pageY;
-    var k_p = convOffsetToRelative(e.pageX, e.pageY);
+    let k_p = convOffsetToRelative(e.pageX, e.pageY);
     if(GameView.dragState && GameView.dragCounter > 10){
-    	var threshold = 1000;
-    	var newoffset_x = (k_p[0] - GameView.coord_x);
-    	var newoffset_y = (k_p[1] - GameView.coord_y);
+    	let threshold = 1000;
+    	let newoffset_x = (k_p[0] - GameView.coord_x);
+    	let newoffset_y = (k_p[1] - GameView.coord_y);
     	//if( Math.abs(newoffset_x) <= threshold) 
     	GameView.offset_x -= newoffset_x*0.64;
     	//if( Math.abs(newoffset_y) <= threshold) 
@@ -170,9 +170,9 @@ $("div#map").on('DOMMouseScroll mousewheel', function(e){
     	}else{
 	    	keys = function(){
 	    		if(allshapes.length < 1) return false;
-	    		var boundary = parseInt($("input#scalebox").val());
+	    		let boundary = parseInt($("input#scalebox").val());
 	    		if(boundary==''||boundary==undefined) boundary = 15;
-	    		var NearPoints = allNearPoints([GameView.coord_x,GameView.coord_y], boundary, allshapes);
+	    		let NearPoints = allNearPoints([GameView.coord_x,GameView.coord_y], boundary, allshapes);
 	    		if(NearPoints.length < 1) return false;
 	    		return closestPoint([GameView.coord_x,GameView.coord_y], NearPoints);
 	    	}();
@@ -197,8 +197,8 @@ function objectMap(object, mapFn) {
 }
 
 function convOffsetToRelative(x_0,y_0){
-	var cct = (x_0*(GameView.viewscale) + GameView.offset_x)//*(GameView.image_width/GameView.window_width);
-	var xxt = (y_0*(GameView.viewscale)  + GameView.offset_y)//*(GameView.image_height/GameView.window_height);
+	let cct = (x_0*(GameView.viewscale) + GameView.offset_x)//*(GameView.image_width/GameView.window_width);
+	let xxt = (y_0*(GameView.viewscale)  + GameView.offset_y)//*(GameView.image_height/GameView.window_height);
 	return [cct,xxt];
 }
 
@@ -206,17 +206,17 @@ function deleteShape(id){
 	f = parseInt(id);
 	if(id > -1){
 		allshapes.splice(f,1);
-		for(var i=f; i < allshapes.length; i++){
+		for(let i=f; i < allshapes.length; i++){
 			allshapes[i]['val'] = allshapes[i]['val'] - 1;
 		}
 	}
 }
 
 function insideShape(point, shapearray){
-	var max_H = shapearray[0][1];
-	var max_W = shapearray[0][0];
-	var min_H = shapearray[0][1];
-	var min_W = shapearray[0][0];
+	let max_H = shapearray[0][1];
+	let max_W = shapearray[0][0];
+	let min_H = shapearray[0][1];
+	let min_W = shapearray[0][0];
 	for(index in shapearray){
 		if(shapearray[index][0] > max_W) max_W = shapearray[index][0];
 		if(shapearray[index][0] < min_W) min_W = shapearray[index][0];
@@ -227,27 +227,27 @@ function insideShape(point, shapearray){
 }
 
 function insideShapeRobust(point, array){
-	var collisionCounter = 0;
-	var len = array.length;
-	for(var i=0; i < len; i++){
+	let collisionCounter = 0;
+	let len = array.length;
+	for(let i=0; i < len; i++){
 		if(lineCollider([point,[point[0]+10000,point[1]+10000]],[array[i],array[(i+1)%len]])) collisionCounter++;
 	}
 	return ((collisionCounter%2)>0);
 }
 
 function lineCollider(line_0, line_1){
-	var onSegment = function(a_0, b_0, c_0){
+	let onSegment = function(a_0, b_0, c_0){
 		return (b_0[0] <= Math.max(...[a_0[0], c_0[0]]) && b_0 >= Math.min(...[b_0[0], c_0[0]]) && b_0[1] <= Math.max(...[a_0[1], c_0[1]]) && b_0[1] >= Math.min(...[a_0[1], c_0[1]]))
 	}
-	var orientation = function(a_0, b_0, c_0){
-		var val_0 = ((b_0[1] - a_0[1]) * (c_0[0] - b_0[0])) - ((b_0[0] - a_0[0]) * (c_0[1] - b_0[1]));
+	let orientation = function(a_0, b_0, c_0){
+		let val_0 = ((b_0[1] - a_0[1]) * (c_0[0] - b_0[0])) - ((b_0[0] - a_0[0]) * (c_0[1] - b_0[1]));
 
 		if(val_0 > 0) return 1;
 		if(val_0 < 0) return 2;
 		return 0;
 	}
-	var intersecting = function(p_1_0, p_1_1, p_2_0, p_2_1){
-		var orients = [
+	let intersecting = function(p_1_0, p_1_1, p_2_0, p_2_1){
+		let orients = [
 			orientation(p_1_0, p_1_1, p_2_0),
 			orientation(p_1_0, p_1_1, p_2_1),
 			orientation(p_2_0, p_2_1, p_1_0),
@@ -282,13 +282,13 @@ function allNearPoints(point_0, boundary, shapearray){
 }
 
 function closestPoint(point_0, shapearray){
-	var mX = GameView.coord_x;
-	var mY = GameView.coord_y;
+	let mX = GameView.coord_x;
+	let mY = GameView.coord_y;
 	if(shapearray.length < 1) return false;
-	var finalPoint = shapearray[0];
-	var shortestDistance = 100000;
-	for(var f=0; f < shapearray.length; f++){
-		var fhr = Math.sqrt(Math.abs((shapearray[f][0] - mX)**2 + (shapearray[f][1] - mY)**2));
+	let finalPoint = shapearray[0];
+	let shortestDistance = 100000;
+	for(let f=0; f < shapearray.length; f++){
+		let fhr = Math.sqrt(Math.abs((shapearray[f][0] - mX)**2 + (shapearray[f][1] - mY)**2));
 		if( fhr < shortestDistance){
 			shortestDistance = fhr;
 			finalPoint = shapearray[f];
@@ -298,7 +298,7 @@ function closestPoint(point_0, shapearray){
 }
 
 function redefineCurrentShape(){
-	var string = "";
+	let string = "";
 	for(index in newshape){
 		if(index==0){
 			string+= "M"+newshape[0][0]+" "+newshape[0][1]+" ";
@@ -311,8 +311,8 @@ function redefineCurrentShape(){
 }
 
 function redefineCursorBoundary(){
-	var string = "";
-	var boundary = $("input#scalebox").val();
+	let string = "";
+	let boundary = $("input#scalebox").val();
 	if(boundary == ""){
 		$("circle#cursor-path").attr("cx", GameView.coord_x).attr("cy", GameView.coord_y).attr("r", "0");
 		return;
@@ -321,7 +321,7 @@ function redefineCursorBoundary(){
 }
 
 function redefineAllShapes(){
-	var string = "<circle id=\"cursor-path\"></circle><path id=\"current-path\"></path>";
+	let string = "<circle id=\"cursor-path\"></circle><path id=\"current-path\"></path>";
 	for(index_0 in allshapes){
 		string+= "<path val=\""+allshapes[index_0]['id']+"\" class=\"rendered-path "+allshapes[index_0]['terrain_type']+"\" d=\"";
 		for(index_1 in allshapes[index_0]['shape']){
@@ -339,7 +339,7 @@ function redefineAllShapes(){
 }
 
 function renderNewShape(){
-	var string = "<path val=\""+newshape['id']+"\" class=\"rendered-path "+GameView.terrainType+"\" d=\"";
+	let string = "<path val=\""+newshape['id']+"\" class=\"rendered-path "+GameView.terrainType+"\" d=\"";
 	for(index in newshape){
 		if(index==0){
 			string+="M"+newshape[0][0]+" "+newshape[0][1]+" ";
@@ -367,7 +367,7 @@ $(document).keydown(function(e){
 			$("path#current-path").attr("d","");
 			if(newshape.length > 2){
 				allshapes.push({ 'id' : allshapes.length, 'shape' : newshape, 'terrain_type' : GameView.terrainType, 'center' : function(){
-					var count = [0, 0];
+					let count = [0, 0];
 					for(ad in newshape){
 						count[0]+= newshape[ad][0];
 						count[1]+= newshape[ad][1];
@@ -385,19 +385,46 @@ $(document).keydown(function(e){
 			//});
 			keyMap[80] = false;
 			keyMap[16] = false;
-			download(JSON.stringify(allshapes), 'map.txt', 'text/plain');
+			dowloadData();
+			
 		}
 		if(keyMap[16] && keyMap[82]){
-			var myFile = $('#fileinput').prop('files')[0];
-			var reader = new FileReader();
+			let myFile = $('#fileinput').prop('files')[0];
+			let reader = new FileReader();
 			reader.onload = function (e) {
                 output = e.target.result;
-                allshapes = $.parseJSON(output);
+                let newObject = $.parseJSON(output);
+
+                // format the hash table to a unity-compatible format
+                allshapes = function(){
+                	let formedShape = [];
+                	for(let i=0; i < newObject["provinces"].length; i++){
+                		formedShape.push(function(){
+                			let newProvince = {
+                				'id' : newObject["provinces"][i]["id"],
+                				"terrain_type" : newObject["provinces"][i]["terrain_type"],
+                				"center" : [newObject["provinces"][i]["center"][0]["x"], newObject["provinces"][i]["center"][0]["y"]],
+                				"shape" : function(){
+                					let newPolygon = [];
+                					for(let k=0; k < newObject["provinces"][i]["shape"].length; k++){
+                						newPolygon.push([newObject["provinces"][i]["shape"][k]["x"], newObject["provinces"][i]["shape"][k]["y"]]);
+                					}
+                					return newPolygon;
+                				}()
+                			};
+                			return newProvince;
+                		}());
+                	}
+
+                	return formedShape;
+
+                }();
+                //
                 redefineAllShapes();
             };
             reader.readAsText(myFile);
             n = function(){
-				var img = new Image();
+				let img = new Image();
 				img.onload = function(){
 					GameView.image_width = this.width;
 					GameView.image_height = this.height;
@@ -417,8 +444,49 @@ $(document).keydown(function(e){
 	}
 });
 
+function downloadData(oldFormat=false){
+	if(oldFormat){
+		let newData = function(){
+			return {
+				"provinces" : function(){
+					provinceList = [];
+					for(let i=0; i < allshapes.length; i++){
+						provinceList.push(function(){
+							let newProvince = {
+								"id" : allshapes[i]["id"],
+								"terrain_type" : allshapes[i]["terrain_type"],
+								"shape" : function(){
+									let pointList = [];
+									for(let k=0; k < allshapes[i]["shape"].length; k++){
+										pointList.push({
+											"x" : allshapes[i]["shape"][k][0],
+											"y" : allshapes[i]["shape"][k][1]
+										});
+									}
+									return pointList;
+								}(),
+								"center" : [{
+									"x" : allshapes[i]["center"][0],
+									"y" : allshapes[i]["center"][1]
+								}]
+							};
+							return newProvince;
+						}());
+					}
+					return provinceList;
+				}()
+			};
+
+		}();
+		console.log(JSON.stringify(newData));
+		//download(JSON.stringify(newData), 'map.txt', 'text/plain');
+	}else{
+		download(JSON.stringify(allshapes), 'map.txt', 'text/plain');
+	}
+}
+
 function download(strData, strFileName, strMimeType) {
-    var D = document,
+    let D = document,
         A = arguments,
         a = D.createElement("a"),
         d = A[0],
@@ -426,7 +494,7 @@ function download(strData, strFileName, strMimeType) {
         t = A[2] || "text/plain";
     a.href = "data:" + strMimeType + "charset=utf-8," + escape(strData);
     if (window.MSBlobBuilder) { // IE10
-        var bb = new MSBlobBuilder();
+        let bb = new MSBlobBuilder();
         bb.append(strData);
         return navigator.msSaveBlob(bb, strFileName);
     }
@@ -435,14 +503,14 @@ function download(strData, strFileName, strMimeType) {
         a.innerHTML = "downloading...";
         D.body.appendChild(a);
         setTimeout(function() {
-            var e = D.createEvent("MouseEvents");
+            let e = D.createEvent("MouseEvents");
             e.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
             a.dispatchEvent(e);
             D.body.removeChild(a);
         }, 66);
         return true;
     };
-    var f = D.createElement("iframe");
+    let f = D.createElement("iframe");
     D.body.appendChild(f);
     f.src = "data:" + (A[2] ? A[2] : "application/octet-stream") + (window.btoa ? ";base64" : "") + "," + (window.btoa ? window.btoa : escape)(strData);
     setTimeout(function() {

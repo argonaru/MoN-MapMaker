@@ -385,7 +385,7 @@ $(document).keydown(function(e){
 			//});
 			keyMap[80] = false;
 			keyMap[16] = false;
-			dowloadData();
+			downloadData();
 			
 		}
 		if(keyMap[16] && keyMap[82]){

@@ -14,7 +14,9 @@ let GameView = {
     'coord_y' : 0,
     'mode' : 'default',
     'terrainType' : 'null',
-    'focused' : true
+    'focused' : true,
+    'mouseOrigin' : [0, 0],
+    'moveMode' : 'drag'
 }
 
 let n = function(){
@@ -28,6 +30,20 @@ let n = function(){
 	img.src = "map.png";
 	return;
 }();
+
+function UpdateScrollMove(){
+	if(GameView.focused && GameView.dragState && (GameView.dragCounter > 2)){
+
+		let newoffset_x = GameView.mouse_x - GameView.mouseOrigin[0];
+		let newoffset_y = GameView.mouse_y - GameView.mouseOrigin[1];
+
+		GameView.offset_x += newoffset_x * 0.1 * GameView.viewscale;
+		GameView.offset_y += newoffset_y * 0.1 * GameView.viewscale;
+
+		$("svg#svg-path").attr('viewBox', '0 0 '+GameView.image_width+' '+GameView.image_height).css('width', GameView.image_width/(GameView.viewscale - 0.0000001)+"px ").css('height', GameView.image_height/(GameView.viewscale - 0.0000001)+"px").css('left', (-GameView.offset_x/GameView.viewscale)+"px ").css('top' , (-GameView.offset_y/GameView.viewscale)+"px");
+		$("div#map").css('background-size', GameView.image_width/(GameView.viewscale - 0.0000001)+"px "+GameView.image_height/(GameView.viewscale - 0.0000001)+"px").css('background-position', (-GameView.offset_x/GameView.viewscale)+"px "+(-GameView.offset_y/GameView.viewscale)+"px");
+	}
+}
 
 let newshape = [];
 
@@ -52,7 +68,7 @@ $(window).resize(function(){
 	keyMap = objectMap(keyMap, function(){
 		return false;
 	});
-})
+});
 
 $("div#tools button").click(function(){
 	$(this).siblings().removeClass("selected");
@@ -117,28 +133,68 @@ $("div#map").on('DOMMouseScroll mousewheel', function(e){
 		redefineCursorBoundary();
 	}
 	
-}).on('mousedown', function(){
-	GameView.dragState = true;
-    GameView.dragCounter = 0;
+}).on('contextmenu', function(e){
+	e.preventDefault();
+	console.log("Debug Right click menu");
+}).on('mousedown', function(e){
+	if(e.which == 1){
+		GameView.dragState = true;
+	    GameView.dragCounter = 0;
+	    switch(GameView.moveMode){
+	    	case 'drag' :
+	    		GameView.mouseOrigin = convOffsetToRelative(e.pageX, e.pageY);
+	    		try { clearInterval(RefreshLoop); } catch(e) {}
+	    	break;
+
+	    	case 'scroll' :
+	    		GameView.mouseOrigin = [e.pageX, e.pageY];
+	    		RefreshLoop = setInterval(UpdateScrollMove, 30);
+	    	break;
+
+	    	default :
+	    		GameView.mouseOrigin = convOffsetToRelative(e.pageX, e.pageY);
+	    		try { clearInterval(RefreshLoop); } catch(e) {}
+	    	break;
+	    }
+	}
 }).on('mousemove', function(e){
-	GameView.mouse_x = e.pageX;
-	GameView.mouse_y = e.pageY;
+	
     let k_p = convOffsetToRelative(e.pageX, e.pageY);
-    if(GameView.dragState && GameView.dragCounter > 10){
-    	let threshold = 1000;
-    	let newoffset_x = (k_p[0] - GameView.coord_x);
-    	let newoffset_y = (k_p[1] - GameView.coord_y);
-    	//if( Math.abs(newoffset_x) <= threshold) 
-    	GameView.offset_x -= newoffset_x*0.64;
-    	//if( Math.abs(newoffset_y) <= threshold) 
-    	GameView.offset_y -= newoffset_y*0.64;
-        //GameView.offset_x -= (k_p[0] - GameView.coord_x)*0.5//*GameView.viewscale*(5.78/GameView.viewscale);
-        //GameView.offset_y -= (k_p[1] - GameView.coord_y)*0.5//*GameView.viewscale*(5.78/GameView.viewscale);
+    if(e.which == 1 && GameView.dragState && GameView.dragCounter > 2){
+    	//let newoffset_x = (k_p[0] - GameView.coord_x);
+    	//let newoffset_y = (k_p[1] - GameView.coord_y);
+    	let newoffset_x = 0;
+    	let newoffset_y = 0;
+    	switch(GameView.moveMode){
+	    	case 'drag' :
+	    		newoffset_x = k_p[0] - GameView.mouseOrigin[0];
+		    	newoffset_y = k_p[1] - GameView.mouseOrigin[1];
+		    	GameView.offset_x -= newoffset_x*0.64;
+		    	GameView.offset_y -= newoffset_y*0.64;
+	    	break;
+
+	    	case 'scroll' :
+	    		//newoffset_x = e.pageX - GameView.mouseOrigin[0];
+		    	//newoffset_y = e.pageY - GameView.mouseOrigin[1];
+		    	//GameView.offset_x += newoffset_x*0.04;
+		    	//GameView.offset_y += newoffset_y*0.04;
+		    	//console.log(GameView.mouseOrigin, GameView.offset_x, GameView.offset_y);
+	    	break;
+
+	    	default :
+	    		newoffset_x = k_p[0] - GameView.mouseOrigin[0];
+		    	newoffset_y = k_p[1] - GameView.mouseOrigin[1];
+		    	GameView.offset_x -= newoffset_x*0.64;
+		    	GameView.offset_y -= newoffset_y*0.64;
+	    	break;
+	    }
 
         $("svg#svg-path").attr('viewBox', '0 0 '+GameView.image_width+' '+GameView.image_height).css('width', GameView.image_width/(GameView.viewscale - 0.0000001)+"px ").css('height', GameView.image_height/(GameView.viewscale - 0.0000001)+"px").css('left', (-GameView.offset_x/GameView.viewscale)+"px ").css('top' , (-GameView.offset_y/GameView.viewscale)+"px");
 		$("div#map").css('background-size', GameView.image_width/(GameView.viewscale - 0.0000001)+"px "+GameView.image_height/(GameView.viewscale - 0.0000001)+"px").css('background-position', (-GameView.offset_x/GameView.viewscale)+"px "+(-GameView.offset_y/GameView.viewscale)+"px");
     }
     
+    GameView.mouse_x = e.pageX;
+	GameView.mouse_y = e.pageY;
     GameView.coord_x = k_p[0]
     GameView.coord_y = k_p[1];
     $("div#coordinates").text("  " + Math.floor(GameView.coord_x) + "," + Math.floor(GameView.coord_y) );
@@ -148,7 +204,9 @@ $("div#map").on('DOMMouseScroll mousewheel', function(e){
 
 }).on('mouseup', function(){
 	GameView.dragState = false;
-    if(GameView.dragCounter > 10){
+	try { clearInterval(RefreshLoop); } catch(e) {}
+    if(GameView.dragCounter > 2){
+    	
     }else{
     	if(GameView.mode!='default'){
     		for(index_0 in allshapes){
@@ -464,8 +522,8 @@ function loadOldFormat(){
 	}();
 }
 
-function downloadData(oldFormat=false){
-	if(oldFormat){
+function downloadData(newFormat=true){
+	if(newFormat){
 		let newData = function(){
 			return {
 				"provinces" : function(){
@@ -498,7 +556,7 @@ function downloadData(oldFormat=false){
 			};
 
 		}();
-		console.log(JSON.stringify(newData));
+		download(JSON.stringify(newData), 'map.txt', 'text/plain');
 		//download(JSON.stringify(newData), 'map.txt', 'text/plain');
 	}else{
 		download(JSON.stringify(allshapes), 'map.txt', 'text/plain');
